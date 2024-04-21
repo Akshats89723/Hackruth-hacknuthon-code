@@ -1,2 +1,49 @@
-[InternetShortcut]
-URL=file:///c%3A/Users/Prince%20Shah/Desktop/Coding/chatbot/chatbot/Python%28flask%29Backend.py
+# app.py
+from flask import Flask, jsonify, request
+
+app = Flask(_name_)
+
+class HRManager:
+    def _init_(self):
+        self.questions = [
+            "Tell me about yourself.",
+            "What was your percentage in the last semester?",
+            "What's the project you have done?",
+            "Why should we hire you?",
+            "Do you have any experience or internship for the same role?"
+        ]
+        self.responses = []
+
+ def ask_question(self, question):
+        response = "Sample response"
+        self.save_response(question, response)
+
+    def save_response(self, question, response):
+        self.responses.append({"question": question, "response": response})
+
+    def get_responses(self):
+        return self.responses
+
+hr_manager = HRManager()
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.route('/questions', methods=['GET'])
+def get_questions():
+    return jsonify({"questions": hr_manager.questions})
+
+@app.route('/responses', methods=['GET'])
+def get_responses():
+    return jsonify({"responses": hr_manager.get_responses()})
+
+@app.route('/answer', methods=['POST'])
+def answer_question():
+    data = request.get_json()
+    question = data.get('question')
+    hr_manager.ask_question(question)
+    return jsonify({"status": "success"})
+
+if _name_ == '_main_':
+    app.run(debug=True)
